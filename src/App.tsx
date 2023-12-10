@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
 import {v1} from "uuid";
+import AddItemForm from "./components/AddItemForm";
 
 export type FilterValueType = "all" | "active" | "completed"
 export type StateType = {
@@ -35,8 +36,7 @@ function App() {
     ])
     const [state, setState] = useState<StateType>(tasks)
     const removeTask = (taskId: string, todolistId: string) => {
-        const filteredTasks = state[todolistId].filter(t => t.id !== taskId)
-        state[todolistId] = filteredTasks
+        state[todolistId] = state[todolistId].filter(t => t.id !== taskId)
         setState({...state})
     }
     const addTask = (newTitle: string, todolistId: string) => {
@@ -50,6 +50,14 @@ function App() {
             setState({...state})
         }
     }
+    const changeTaskTitle = (todolistId: string, taskId: string, newTitle: string) => {
+        state[todolistId].forEach(t => {
+            if (t.id === taskId) {
+                t.title = newTitle
+            }
+        })
+        setState({...state})
+    }
     const changeTodolistFilter = (todolistId: string, filterValue: FilterValueType) => {
         const todo = todolists.find(t => t.id === todolistId)
         if (todo) {
@@ -62,8 +70,23 @@ function App() {
         delete state[id]
         setState({...state})
     }
+    const addTodolist = (title: string) => {
+        const newTodolistId = v1()
+        setTodolists([...todolists, {id: newTodolistId, title, filter: "all"}])
+        state[newTodolistId] = []
+        setState({...state})
+    }
+    const changeTodolistTitle = (id: string, newTitle: string) => {
+        todolists.forEach((t) => {
+            if (t.id === id) {
+                t.title = newTitle
+            }
+        })
+        setTodolists([...todolists])
+    }
     return (
         <div className="App">
+            <AddItemForm addItemCallback={addTodolist}/>
             {todolists.map((todo) => {
                 let filteredTasks: TaskType[];
                 switch (todo.filter) {
@@ -85,6 +108,8 @@ function App() {
                     addTask={addTask}
                     changeTaskStatus={changeTaskStatus}
                     removeTodolist={removeTodolist}
+                    changeTaskTitle={changeTaskTitle}
+                    changeTodolistTitle={changeTodolistTitle}
                 />
             })}
         </div>
