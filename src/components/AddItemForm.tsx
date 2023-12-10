@@ -1,9 +1,13 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import '../App.css'
-type AddItemPropsType ={
-    addItemCallback:(title:string)=>void
+import {Button, TextField} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
+
+type AddItemPropsType = {
+    addItemCallback: (title: string) => void
 }
-const AddItemForm = (props:AddItemPropsType) => {
+const AddItemForm = (props: AddItemPropsType) => {
     const [title, setNewTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
     const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,9 +27,11 @@ const AddItemForm = (props:AddItemPropsType) => {
     }
     return (
         <div>
-            <input className={error ? 'error' : ''} value={title} onChange={onChangeTitle} onKeyPress={addItemOnKeyPress}/>
-            <button onClick={addItemCallback}>+</button>
-            {error && <div className={'error-message'}>{error}</div>}
+            <TextField error={!!error} helperText={error}
+                       variant="standard" label={"Add title"} value={title}
+                       onChange={onChangeTitle}
+                       onKeyPress={addItemOnKeyPress}/>
+            <Button variant="text" size="large" onClick={addItemCallback}><AddIcon fontSize="large"/></Button>
         </div>
     );
 };
