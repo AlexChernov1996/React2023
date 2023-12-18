@@ -2,13 +2,14 @@ import {FilterValuesType, TodolistType} from "../App";
 import {v1} from "uuid";
 
 
-type RemoveToDoType = {
+export type RemoveToDoType = {
     type: 'REMOVE-TODOLIST'
     id: string
 }
-type AddToDoType = {
+export type AddToDoType = {
     type: 'ADD-TODOLIST'
     title: string
+    id:string
 }
 type ChangeToDoTitleType = {
     type: 'CHANGE-TODOLIST-TITLE'
@@ -34,7 +35,7 @@ export const todolistsReducer = (state: TodolistType[], action: ActionType): Tod
         case 'REMOVE-TODOLIST':
             return state.filter(t => t.id !== action.id)
         case 'ADD-TODOLIST':
-            return [...state, {id: v1(), title: action.title, filter: "all"}]
+            return [...state, {id: action.id, title: action.title, filter: "all"}]
         case 'CHANGE-TODOLIST-TITLE':
             const newState = [...state]
             newState.find(t => t.id === action.id)!.title = action.title
@@ -51,7 +52,7 @@ export const todolistsReducer = (state: TodolistType[], action: ActionType): Tod
             throw new Error('I don\'t understand this type')
     }
 }
-export const addTodolistAC = (title: string): AddToDoType => ({type: 'ADD-TODOLIST', title})
+export const addTodolistAC = (title: string): AddToDoType => ({type: 'ADD-TODOLIST', title,id:v1()})
 export const removeTodolistAC = (id: string): RemoveToDoType => ({type: 'REMOVE-TODOLIST', id})
 export const changeTodolistTitleAC = (title: string, id: string): ChangeToDoTitleType => ({
     type: 'CHANGE-TODOLIST-TITLE',
