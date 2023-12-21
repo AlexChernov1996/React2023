@@ -1,4 +1,4 @@
-import {FilterValuesType, TasksStateType, TodolistType} from "../App";
+import {TasksStateType} from "../App";
 import {v1} from "uuid";
 import {AddToDoType, RemoveToDoType} from "./todolist-reducer";
 
@@ -10,7 +10,7 @@ type ChangeTaskTitle = ReturnType<typeof changeTaskTitleAC>
 
 
 type ActionType = RemoveTaskType | AddTaskType | ChangeTaskStatus | ChangeTaskTitle | AddToDoType | RemoveToDoType
-export const tasksReducer = (state: TasksStateType, action: ActionType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = {}, action: ActionType): TasksStateType => {
     switch (action.type) {
         case "REMOVE-TASK":
             return {...state, [action.todoId]: state[action.todoId].filter(t => t.id !== action.taskId)}
@@ -40,7 +40,7 @@ export const tasksReducer = (state: TasksStateType, action: ActionType): TasksSt
             delete newState[action.id]
             return newState
         default:
-            throw new Error('I don\'t understand this type')
+            return state
     }
 }
 

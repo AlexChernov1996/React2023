@@ -9,7 +9,7 @@ export type RemoveToDoType = {
 export type AddToDoType = {
     type: 'ADD-TODOLIST'
     title: string
-    id:string
+    id: string
 }
 type ChangeToDoTitleType = {
     type: 'CHANGE-TODOLIST-TITLE'
@@ -22,15 +22,9 @@ type ChangeToDoFilterType = {
     filter: FilterValuesType
 }
 
-const todolistId1 = v1();
-const todolistId2 = v1();
-const state = [
-    {id: todolistId1, title: "What to learn", filter: "all"},
-    {id: todolistId2, title: "What to buy", filter: "all"}
-]
 
 type ActionType = RemoveToDoType | AddToDoType | ChangeToDoTitleType | ChangeToDoFilterType
-export const todolistsReducer = (state: TodolistType[], action: ActionType): TodolistType[] => {
+export const todolistsReducer = (state: TodolistType[] = [], action: ActionType): TodolistType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(t => t.id !== action.id)
@@ -38,7 +32,7 @@ export const todolistsReducer = (state: TodolistType[], action: ActionType): Tod
             return [...state, {id: action.id, title: action.title, filter: "all"}]
         case 'CHANGE-TODOLIST-TITLE':
             const newState = [...state]
-            newState.find(t => t.id === action.id)!.title = action.title
+            newState.find(t => t.id === action.id? t.title = action.title: t)
             return newState
         case "CHANGE-TODOLIST-FILTER":
             return state.map((t) => {
@@ -47,12 +41,11 @@ export const todolistsReducer = (state: TodolistType[], action: ActionType): Tod
                 }
                 return t
             })
-
         default:
-            throw new Error('I don\'t understand this type')
+            return state
     }
 }
-export const addTodolistAC = (title: string): AddToDoType => ({type: 'ADD-TODOLIST', title,id:v1()})
+export const addTodolistAC = (title: string): AddToDoType => ({type: 'ADD-TODOLIST', title, id: v1()})
 export const removeTodolistAC = (id: string): RemoveToDoType => ({type: 'REMOVE-TODOLIST', id})
 export const changeTodolistTitleAC = (title: string, id: string): ChangeToDoTitleType => ({
     type: 'CHANGE-TODOLIST-TITLE',
